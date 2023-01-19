@@ -1,13 +1,25 @@
 import { Router } from 'express'
+import {
+  getCollaborator,
+  createCollaborator,
+  updateCollaborator,
+  deleteCollaborator,
+  findCollaboratorID,
+  findCollaboratorNME,
+  } from '../controllers/collaborator.controller.js'
 
 const router = Router()
 
-router.get('/collaborator', (req, res) => res.send('getting collaborator'))
+router.get('/collaborators', getCollaborator)
 
-router.post('/collaborator', (req, res) => res.send('create collaborator'))
+router.post('/collaboratorRegister', createCollaborator)
 
-router.put('/collaborator', (req, res) => res.send('update collaborator'))
+router.put('/collaboratorUpdate/:id', updateCollaborator)
 
-router.delete('/collaborator', (req, res) => res.send('delete collaborator'))
+router.delete('/collaboratorDelete/:id', deleteCollaborator)
+
+router.post('/collaboratorFind/:id', findCollaboratorID)
+
+router.post('/collaboratorNumberFind/:user/:password', findCollaboratorNME)
 
 export default router
