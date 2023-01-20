@@ -39,6 +39,9 @@ const collaboratorSchema = mongoose.Schema({
   photo: {
     type: String,
   },
+  user_type: {
+    type: String
+  },
   
 })
 
