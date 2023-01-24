@@ -7,12 +7,15 @@ const collaboratorSchema = mongoose.Schema({
   },
   name: {
     type: String,
+    requerid: false,
   },
   lastname: {
     type: String,
+    requerid: false,
   },
   dateofbirthday: {
     type: String,
+    requerid: false,
   },
   email: {
     type: String,
@@ -20,27 +23,35 @@ const collaboratorSchema = mongoose.Schema({
   },
   password: {
     type: String,
+    requerid: false,
   },
   area: {
     type: String,
+    requerid: false,
   },
   project: {
     type: String,
+    requerid: false,
   },
   date_of_register: {
     type: String,
+    requerid: false,
   },
   phone_number: {
     type: String,
+    requerid: false,
   },
   emergency_phone_number: {
     type: String,
+    requerid: false,
   },
   photo: {
     type: String,
+    requerid: false,
   },
   user_type: {
-    type: String
+    type: String,
+    requerid: false,
   },
   
 })
