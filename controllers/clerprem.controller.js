@@ -36,6 +36,7 @@ export const createCollaborator = async (req, res) => {
 
 
 /* Crear un registro de curso*/
+/*
 export const createCourse = async (req, res) => {
   const { name_course } = req.body
 
@@ -49,6 +50,7 @@ export const createCourse = async (req, res) => {
 
   res.send({ "code": 201, "message": "Course inserted successfully" })
 }
+*/
 
 /*Actualizar un registro*/
 export const updateCollaborator = async (req, res) => {
@@ -120,3 +122,33 @@ export const findCollaboratorNumber = async (req, res) => {
 
 }
 
+
+/*Encontrar un registro por área*/
+export const findCollaboratorArea = async (req, res) => {
+
+  const collaborator = await Collaborator.find({ area: (req.params.user) })
+
+  if (!collaborator) {
+    return res.status(404).json({
+      "message": "Collaborator doesn´t exists"
+    })
+  }
+
+  return res.json(collaborator)
+
+}
+
+    /*Encontrar un registro por numero de empleado*/
+export const findCollaboratorPassword = async (req, res) => {
+
+  const collaborator = await Collaborator.find({ password: (req.params.user) })
+
+  if (!collaborator) {
+    return res.status(404).json({
+      "message": "Collaborator doesn´t exists"
+    })
+  }
+
+  return res.json(collaborator)
+
+}

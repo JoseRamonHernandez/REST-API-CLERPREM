@@ -7,6 +7,8 @@ import {
   findCollaboratorID,
   findCollaboratorNME,
   findCollaboratorNumber,
+  findCollaboratorArea,
+  findCollaboratorPassword,
 
  
 } from '../controllers/clerprem.controller.js'
@@ -27,6 +29,10 @@ router.get('/collaboratorFind/:id', findCollaboratorID)
 router.get('/collaboratorNumberFind/:user/:password', findCollaboratorNME)
 
 router.get('/collaborator/:user', findCollaboratorNumber)
+
+router.get('/collaboratorArea/:user', findCollaboratorArea)
+
+router.get('/collaboratorpassword/:user', findCollaboratorPassword)
 
 
 export default router
