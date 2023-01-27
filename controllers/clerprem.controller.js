@@ -138,10 +138,25 @@ export const findCollaboratorArea = async (req, res) => {
 
 }
 
-    /*Encontrar un registro por numero de empleado*/
+    /*Encontrar un registro por numero de contraseña*/
 export const findCollaboratorPassword = async (req, res) => {
 
   const collaborator = await Collaborator.find({ password: (req.params.user) })
+
+  if (!collaborator) {
+    return res.status(404).json({
+      "message": "Collaborator doesn´t exists"
+    })
+  }
+
+  return res.json(collaborator)
+
+}
+
+/*Encontrar un registro por numero de area*/
+export const findForType = async (req, res) => {
+
+  const collaborator = await Collaborator.find({ user_type: (req.params.user) })
 
   if (!collaborator) {
     return res.status(404).json({

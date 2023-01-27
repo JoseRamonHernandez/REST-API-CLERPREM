@@ -9,6 +9,7 @@ import {
   findCollaboratorNumber,
   findCollaboratorArea,
   findCollaboratorPassword,
+  findForType,
 
  
 } from '../controllers/clerprem.controller.js'
@@ -33,6 +34,8 @@ router.get('/collaborator/:user', findCollaboratorNumber)
 router.get('/collaboratorArea/:user', findCollaboratorArea)
 
 router.get('/collaboratorpassword/:user', findCollaboratorPassword)
+
+router.get('/collaboratorType/:user', findForType)
 
 
 export default router
