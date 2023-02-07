@@ -21,9 +21,9 @@ router.get('/collaborators', getCollaborator)
 
 router.post('/collaboratorRegister', createCollaborator)
 
-router.put('/collaboratorUpdate/:id', updateCollaborator)
+router.post('/collaboratorUpdate/:id', updateCollaborator)
 
-router.delete('/collaboratorDelete/:id', deleteCollaborator)
+router.get('/collaboratorDelete/:id', deleteCollaborator)
 
 router.get('/collaboratorFind/:id', findCollaboratorID)
 

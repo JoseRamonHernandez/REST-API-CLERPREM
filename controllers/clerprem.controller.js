@@ -13,7 +13,7 @@ export const getCollaborator = async (req, res) => {
 
 /* Crear un registro*/
 export const createCollaborator = async (req, res) => {
-  const { numero_empleado, name, lastname, dateofbirthday, email, password, area, project, date_of_register, phone_number, emergency_phone_number, photo, user_type } = req.body
+  const { numero_empleado, name, lastname, dateofbirthday, email, password, area, project, date_of_register, phone_number, emergency_phone_number, photo, user_type, status } = req.body
 
   const collaborator = new Collaborator({
     numero_empleado,
@@ -28,7 +28,8 @@ export const createCollaborator = async (req, res) => {
     phone_number,
     emergency_phone_number,
     photo,
-    user_type
+    user_type,
+    status
   })
   await collaborator.save()
   res.send({ "code": 201, "message": "Record inserted successfully" })
