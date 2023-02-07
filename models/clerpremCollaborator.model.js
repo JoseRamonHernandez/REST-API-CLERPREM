@@ -56,8 +56,11 @@ const collaboratorSchema = mongoose.Schema({
   status: {
     type: String,
     required: false,
-  }
+  },
   
-})
+},
+{
+  timestamps: true
+  })
 
 export default mongoose.model('Collaborator', collaboratorSchema)

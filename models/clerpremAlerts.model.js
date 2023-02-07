@@ -11,7 +11,10 @@ const alertSchema = mongoose.Schema({
     type: String,
     requerid: false,
   },
-
-})
+  
+},
+{
+  timestamps: true
+  })
 
 export default mongoose.model('Alert', alertSchema)

@@ -32,6 +32,9 @@ const EventsSchema = mongoose.Schema({
     requerid: false,
   },
   
-})
+},
+{
+  timestamps: true
+  })
 
 export default mongoose.model('Events', EventsSchema)
