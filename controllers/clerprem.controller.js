@@ -1,5 +1,7 @@
 import Collaborator from '../models/clerpremCollaborator.model.js'
 
+import Events from '../models/clerpremEvents.model.js'
+
 
 
 //Models to COLLABORATOR
@@ -166,5 +168,69 @@ export const findForType = async (req, res) => {
   }
 
   return res.json(collaborator)
+
+}
+
+
+// Model Events
+
+/* Traer todos los Eventos*/
+export const getEvents = async (req, res) => {
+  const events = await Events.find()
+  res.json(events)
+}
+
+/* Crear un evento*/
+export const createEvent = async (req, res) => {
+  const { title, subtitle, text, time, date, place } = req.body
+
+  const event = new Events({
+    title,
+    subtitle,
+    text,
+    time,
+    date,
+    place
+  })
+  await event.save()
+  res.send({ "code": 201, "message": "Event inserted successfully" })
+}
+
+/*Actualizar un evento*/
+export const updateEvent = async (req, res) => {
+  const { id } = req.params
+
+  const eventUpdated = await Events.findByIdAndUpdate(id, req.body, {
+    new: true
+  })
+  return res.json(eventUpdated)
+}
+
+
+/*Eliminar un registro*/
+export const deleteEvent = async (req, res) => {
+  const event = await Events.findByIdAndDelete(req.params.id)
+
+  if (!event) {
+    return res.status(404).json({
+      "message": "Event doesn´t exists"
+    })
+  }
+
+  return res.send({ "code": 202, "message": "Event was deleted" })
+}
+
+
+/*Encontrar un registro por id*/
+export const findEventID = async (req, res) => {
+  const event = await Events.findById(req.params.id)
+
+  if (!event) {
+    return res.status(404).json({
+      "message": "Event doesn´t exists"
+    })
+  }
+
+  return res.json(event)
 
 }

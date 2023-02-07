@@ -10,7 +10,11 @@ import {
   findCollaboratorArea,
   findCollaboratorPassword,
   findForType,
-
+  getEvents,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  findEventID
  
 } from '../controllers/clerprem.controller.js'
 
@@ -37,5 +41,16 @@ router.get('/collaboratorpassword/:user', findCollaboratorPassword)
 
 router.get('/collaboratorType/:user', findForType)
 
+//RUTAS PARA EVENTOS
+
+router.get('/events', getEvents)
+
+router.post('/createEvent', createEvent)
+
+router.post('/updateEvent/:id', updateEvent)
+
+router.get('/deleteEvent/:id', deleteEvent)
+
+router.get('/findEvent/:id', findEventID)
 
 export default router
