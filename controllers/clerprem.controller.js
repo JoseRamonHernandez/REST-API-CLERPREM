@@ -2,6 +2,8 @@ import Collaborator from '../models/clerpremCollaborator.model.js'
 
 import Events from '../models/clerpremEvents.model.js'
 
+import Alert from '../models/clerpremAlerts.model.js'
+
 
 
 //Models to COLLABORATOR
@@ -207,7 +209,7 @@ export const updateEvent = async (req, res) => {
 }
 
 
-/*Eliminar un registro*/
+/*Eliminar un evento*/
 export const deleteEvent = async (req, res) => {
   const event = await Events.findByIdAndDelete(req.params.id)
 
@@ -221,7 +223,7 @@ export const deleteEvent = async (req, res) => {
 }
 
 
-/*Encontrar un registro por id*/
+/*Encontrar un evento por id*/
 export const findEventID = async (req, res) => {
   const event = await Events.findById(req.params.id)
 
@@ -232,5 +234,65 @@ export const findEventID = async (req, res) => {
   }
 
   return res.json(event)
+
+}
+
+
+// Model Alerts
+
+/* Traer todos los Avisos*/
+export const getAlert = async (req, res) => {
+  const alert = await Alert.find()
+  res.json(alert)
+}
+
+/* Crear un Aviso*/
+export const createAlert = async (req, res) => {
+  const { title, text } = req.body
+
+  const alert = new Alert({
+    title,
+    text
+  })
+  await alert.save()
+  res.send({ "code": 201, "message": "Alert inserted successfully" })
+}
+
+/*Actualizar un Aviso*/
+export const updateAlert = async (req, res) => {
+  const { id } = req.params
+
+  const alertUpdated = await Alert.findByIdAndUpdate(id, req.body, {
+    new: true
+  })
+  return res.json(alertUpdated)
+}
+
+
+/*Eliminar un Aviso*/
+export const deleteAlert = async (req, res) => {
+  const alert = await Alert.findByIdAndDelete(req.params.id)
+
+  if (!alert) {
+    return res.status(404).json({
+      "message": "Alert doesn´t exists"
+    })
+  }
+
+  return res.send({ "code": 202, "message": "Alert was deleted" })
+}
+
+
+/*Encontrar un Aviso por id*/
+export const findAlertID = async (req, res) => {
+  const alert = await Alert.findById(req.params.id)
+
+  if (!alert) {
+    return res.status(404).json({
+      "message": "Alert doesn´t exists"
+    })
+  }
+
+  return res.json(alert)
 
 }

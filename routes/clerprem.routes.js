@@ -14,7 +14,12 @@ import {
   createEvent,
   updateEvent,
   deleteEvent,
-  findEventID
+  findEventID,
+  getAlert,
+  createAlert,
+  updateAlert,
+  deleteAlert,
+  findAlertID
  
 } from '../controllers/clerprem.controller.js'
 
@@ -52,5 +57,17 @@ router.post('/updateEvent/:id', updateEvent)
 router.get('/deleteEvent/:id', deleteEvent)
 
 router.get('/findEvent/:id', findEventID)
+
+//RUTAS PARA AVISOS (alerts)
+
+router.get('/alerts', getAlert)
+
+router.post('/createAlert', createAlert)
+
+router.post('/updateAlert/:id', updateAlert)
+
+router.get('/deleteAlert/:id', deleteAlert)
+
+router.get('/findAlert/:id', findAlertID)
 
 export default router
