@@ -4,6 +4,8 @@ import Events from '../models/clerpremEvents.model.js'
 
 import Alert from '../models/clerpremAlerts.model.js'
 
+import {uploadImage} from '../utils/cloudinary.js'
+
 
 
 //Models to COLLABORATOR
@@ -24,7 +26,9 @@ export const createCollaborator = async (req, res) => {
 
 try{
   
-  const { numero_empleado, name, lastname, dateofbirthday, email, password, area, project, date_of_register, phone_number, emergency_phone_number, photo, user_type, status } = req.body
+  const { numero_empleado, name, lastname, dateofbirthday, email, password, area, project, date_of_register, phone_number, emergency_phone_number, user_type, status } = req.body
+
+  //console.log(req.files)
 
   const collaborator = new Collaborator({
     numero_empleado,
@@ -38,10 +42,20 @@ try{
     date_of_register,
     phone_number,
     emergency_phone_number,
-    photo,
     user_type,
-    status
+    status,
   })
+
+  if(req.files?.photo)
+  {
+   const result = await uploadImage(req.files.photo.tempFilePath)
+   // console.log(result)
+    collaborator.photo={
+      public_id: result.public_id,
+      secure_url: result.secure_url 
+    }
+  }
+  
   await collaborator.save()
   res.send({ "code": 201, "message": "Record inserted successfully" })
   }catch(error){
@@ -325,11 +339,12 @@ export const getAlert = async (req, res) => {
 export const createAlert = async (req, res) => {
 
   try{
-  const { title, text } = req.body
+  const { title, text, status } = req.body
 
   const alert = new Alert({
     title,
-    text
+    text,
+    status
   })
   await alert.save()
   res.send({ "code": 201, "message": "Alert inserted successfully" })

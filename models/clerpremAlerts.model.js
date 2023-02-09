@@ -11,6 +11,11 @@ const alertSchema = mongoose.Schema({
     type: String,
     requerid: false,
   },
+
+  status:{
+    type: String,
+    required: false,
+  }
   
 },
 {

@@ -45,10 +45,6 @@ const collaboratorSchema = mongoose.Schema({
     type: String,
     requerid: false,
   },
-  photo: {
-    type: String,
-    requerid: false,
-  },
   user_type: {
     type: String,
     requerid: false,
@@ -57,6 +53,10 @@ const collaboratorSchema = mongoose.Schema({
     type: String,
     required: false,
   },
+  photo: {
+    public_id: String,
+    secure_url: String
+  }
   
 },
 {
