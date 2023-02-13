@@ -19,7 +19,8 @@ import {
   createAlert,
   updateAlert,
   deleteAlert,
-  findAlertID
+  findAlertID,
+  findAlertsByStatus
  
 } from '../controllers/clerprem.controller.js'
 
@@ -69,5 +70,7 @@ router.post('/updateAlert/:id', updateAlert)
 router.get('/deleteAlert/:id', deleteAlert)
 
 router.get('/findAlert/:id', findAlertID)
+
+router.get('/findAlertByStatus/:status', findAlertsByStatus)
 
 export default router

@@ -4,7 +4,7 @@ import Events from '../models/clerpremEvents.model.js'
 
 import Alert from '../models/clerpremAlerts.model.js'
 
-import {uploadImage} from '../utils/cloudinary.js'
+//import {uploadImage} from '../utils/cloudinary.js'
 
 
 
@@ -46,7 +46,7 @@ try{
     status,
   })
 
-  if(req.files?.photo)
+/*  if(req.files?.photo)
   {
    const result = await uploadImage(req.files.photo.tempFilePath)
    // console.log(result)
@@ -54,7 +54,7 @@ try{
       public_id: result.public_id,
       secure_url: result.secure_url 
     }
-  }
+  }*/
   
   await collaborator.save()
   res.send({ "code": 201, "message": "Record inserted successfully" })
@@ -401,6 +401,25 @@ export const findAlertID = async (req, res) => {
   }
 
   return res.json(alert)
+    }catch(error){
+    return res.status(500).json({message: error.message})
+  }
+
+}
+
+    /*Encontrar un Aviso por status (true)*/
+export const findAlertsByStatus = async (req, res) => {
+
+  try{
+  const alerts = await Alert.find({ status: (req.params.status) })
+
+  if (!alerts) {
+    return res.status(404).json({
+      "message": "alert doesn´t exists"
+    })
+  }
+
+  return res.json(alerts)
     }catch(error){
     return res.status(500).json({message: error.message})
   }

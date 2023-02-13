@@ -58,9 +58,7 @@ const collaboratorSchema = mongoose.Schema({
     secure_url: String
   }
   
-},
-{
-  timestamps: true
+
   })
 
 export default mongoose.model('Collaborator', collaboratorSchema)
