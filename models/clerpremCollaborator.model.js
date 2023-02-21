@@ -54,8 +54,8 @@ const collaboratorSchema = mongoose.Schema({
     required: false,
   },
   photo: {
-    public_id: String,
-    secure_url: String
+    type: String,
+    required: false,
   }
   
 

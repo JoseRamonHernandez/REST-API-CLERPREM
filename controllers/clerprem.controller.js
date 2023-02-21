@@ -26,7 +26,7 @@ export const createCollaborator = async (req, res) => {
 
 try{
   
-  const { numero_empleado, name, lastname, dateofbirthday, email, password, area, project, date_of_register, phone_number, emergency_phone_number, user_type, status } = req.body
+  const { numero_empleado, name, lastname, dateofbirthday, email, password, area, project, date_of_register, phone_number, emergency_phone_number, user_type, status, photo } = req.body
 
   //console.log(req.files)
 
@@ -44,6 +44,7 @@ try{
     emergency_phone_number,
     user_type,
     status,
+    photo
   })
 
 /*  if(req.files?.photo)
@@ -250,15 +251,12 @@ export const getEvents = async (req, res) => {
 export const createEvent = async (req, res) => {
 
   try{
-  const { title, subtitle, text, time, date, place } = req.body
+  const { title, level, photo } = req.body
 
   const event = new Events({
     title,
-    subtitle,
-    text,
-    time,
-    date,
-    place
+    level,
+    photo
   })
   await event.save()
   res.send({ "code": 201, "message": "Event inserted successfully" })
@@ -339,11 +337,11 @@ export const getAlert = async (req, res) => {
 export const createAlert = async (req, res) => {
 
   try{
-  const { title, text, status } = req.body
+  const { title, photo, status } = req.body
 
   const alert = new Alert({
     title,
-    text,
+    photo,
     status
   })
   await alert.save()

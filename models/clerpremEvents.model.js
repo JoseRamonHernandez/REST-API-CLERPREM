@@ -7,31 +7,15 @@ const EventsSchema = mongoose.Schema({
     requerid: false,
   },
 
-  subtitle: {
+  level: {
     type: String,
     requerid: false,
   },
 
-  text: {
+  photo: {
     type: String,
     requerid: false,
-  },
-
-  time: {
-    type: String,
-    requerid: false,
-  },
-
-  date: {
-    type: String,
-    requerid: false,
-  },
-
-  place: {
-    type: String,
-    requerid: false,
-  },
-  
+  }
 },
 {
   timestamps: true

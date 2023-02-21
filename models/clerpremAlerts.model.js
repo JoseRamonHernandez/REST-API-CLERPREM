@@ -7,7 +7,7 @@ const alertSchema = mongoose.Schema({
     requerid: false,
   },
 
-  text: {
+  photo: {
     type: String,
     requerid: false,
   },
