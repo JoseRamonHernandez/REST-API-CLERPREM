@@ -10,6 +10,7 @@ import {
   findCollaboratorArea,
   findCollaboratorPassword,
   findForType,
+  vacanciesApplied,
   getEvents,
   createEvent,
   updateEvent,
@@ -20,7 +21,13 @@ import {
   updateAlert,
   deleteAlert,
   findAlertID,
-  findAlertsByStatus
+  findAlertsByStatus,
+  getVacancies,
+  createVacancies,
+  updateVacancies,
+  agregarVacancies,
+  deleteVacancies,
+  findVacanciesID,
  
 } from '../controllers/clerprem.controller.js'
 
@@ -47,6 +54,8 @@ router.get('/collaboratorpassword/:user', findCollaboratorPassword)
 
 router.get('/collaboratorType/:user', findForType)
 
+router.post('/vacaniesApplied/:id', vacanciesApplied)
+
 //RUTAS PARA EVENTOS
 
 router.get('/events', getEvents)
@@ -72,5 +81,20 @@ router.get('/deleteAlert/:id', deleteAlert)
 router.get('/findAlert/:id', findAlertID)
 
 router.get('/findAlertByStatus/:status', findAlertsByStatus)
+
+
+//RUTAS PARA Vacancies
+
+router.get('/Vacancies', getVacancies)
+
+router.post('/createVacancies', createVacancies)
+
+router.post('/updateVacancies/:id', updateVacancies)
+
+router.post('/registerApplicators/:id', agregarVacancies)
+
+router.get('/deleteVacancies/:id', deleteVacancies)
+
+router.get('/findVacancies/:id', findVacanciesID)
 
 export default router

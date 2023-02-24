@@ -56,9 +56,11 @@ const collaboratorSchema = mongoose.Schema({
   photo: {
     type: String,
     required: false,
-  }
-  
-
-  })
+  },
+  vacancies_applied: [{
+    name_vacancie: String,
+    application_date: String
+  }]
+  });
 
 export default mongoose.model('Collaborator', collaboratorSchema)

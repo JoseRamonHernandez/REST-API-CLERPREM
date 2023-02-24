@@ -6,6 +6,11 @@ const alertSchema = mongoose.Schema({
     type: String,
     requerid: false,
   },
+  
+  level: {
+    type: String,
+    requerid: false,
+  },
 
   photo: {
     type: String,

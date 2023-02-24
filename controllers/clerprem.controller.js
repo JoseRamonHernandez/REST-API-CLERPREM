@@ -4,6 +4,7 @@ import Events from '../models/clerpremEvents.model.js'
 
 import Alert from '../models/clerpremAlerts.model.js'
 
+import Vacancies from '../models/clerpremVacancies.model.js'
 //import {uploadImage} from '../utils/cloudinary.js'
 
 
@@ -233,6 +234,33 @@ export const findForType = async (req, res) => {
 
 }
 
+/*Aplicar a una nueva vacante*/
+export const vacanciesApplied = async (req, res) => {
+  const { id } = req.params; // id del colaborador existente
+  const { name_vacancie, application_date } = req.body; // nuevo nombre_de_vacante y Fecha de aplicación
+  
+  try {
+    const registroExistente = await Collaborator.findById(id); // buscar el registro existente
+    if (!registroExistente) {
+      return res.status(404).json({ mensaje: 'Colaborador no encontrado' });
+    }
+    /*
+    console.log(subtitulo);
+    console.log(indice);
+    console.log(registroExistente.subtitulos);
+    */
+
+    registroExistente.vacancies_applied.push({name_vacancie: name_vacancie, application_date: application_date});
+
+    await registroExistente.save();
+     res.json({ mensaje: 'Nueva Vacante registrada para el colaborador' });
+  
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: 'Error al agregar nuevos campos' });
+  }
+}
+
 
 // Model Events
 
@@ -251,11 +279,10 @@ export const getEvents = async (req, res) => {
 export const createEvent = async (req, res) => {
 
   try{
-  const { title, level, photo } = req.body
+  const { title, photo } = req.body
 
   const event = new Events({
     title,
-    level,
     photo
   })
   await event.save()
@@ -337,10 +364,11 @@ export const getAlert = async (req, res) => {
 export const createAlert = async (req, res) => {
 
   try{
-  const { title, photo, status } = req.body
+  const { title, level, photo, status } = req.body
 
   const alert = new Alert({
     title,
+    level,
     photo,
     status
   })
@@ -418,6 +446,117 @@ export const findAlertsByStatus = async (req, res) => {
   }
 
   return res.json(alerts)
+    }catch(error){
+    return res.status(500).json({message: error.message})
+  }
+
+}
+
+
+// Model Vacancies
+
+/* Traer todos los Vacancies*/
+export const getVacancies = async (req, res) => {
+
+  try{
+  const vacancie = await Vacancies.find()
+  res.json(vacancie)
+    }catch(error){
+    return res.status(500).json({message: error.message})
+  }
+}
+
+/* Crear una Vacancies*/
+export const createVacancies = async (req, res) => {
+
+  try{
+  const { title, description, date_register, photo, area } = req.body
+
+  const vacancie = new Vacancies({
+    title,
+    description,
+    date_register,
+    photo,
+    area
+  })
+  await vacancie.save()
+  res.send({ "code": 201, "message": "Vacancie inserted successfully" })
+  }catch(error){
+    return res.status(500).json({message: error.message})
+  }
+}
+
+/*Actualizar una Vacancies*/
+export const updateVacancies = async (req, res) => {
+
+  try{
+  const { id } = req.params
+
+  const vacancieUpdated = await Vacancies.findByIdAndUpdate(id, req.body, {
+    new: true
+  })
+  return res.json(vacancieUpdated)
+    }catch(error){
+    return res.status(500).json({message: error.message})
+  }
+}
+
+/*Actualizar una Vacancies para registros*/
+export const agregarVacancies = async (req, res) => {
+  const { id } = req.params; // id del registro existente
+  const { number_collaborator, name_collaborator, area_collaborator, date_applied } = req.body; // nuevos campos a agregar
+  
+  try {
+    const registroExistente = await Vacancies.findById(id); // buscar el registro existente
+    if (!registroExistente) {
+      return res.status(404).json({ mensaje: 'Vacante no encontrada' });
+    }
+   
+
+    registroExistente.applicators.push({number_collaborator: number_collaborator, name_collaborator: name_collaborator, area_collaborator: area_collaborator, date_applied: date_applied});
+
+    await registroExistente.save();
+     res.json({ mensaje: 'Registros agregados correctamente', registro: registroExistente });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: 'Error al agregar campos nuevos' });
+  }
+}
+
+
+
+/*Eliminar una Vacancies*/
+export const deleteVacancies = async (req, res) => {
+
+  try{
+  const vacancie = await Vacancies.findByIdAndDelete(req.params.id)
+
+  if (!vacancie) {
+    return res.status(404).json({
+      "message": "Vacancie doesn´t exists"
+    })
+  }
+
+  return res.send({ "code": 202, "message": "Vacancie was deleted" })
+    }catch(error){
+    return res.status(500).json({message: error.message})
+  }
+}
+
+
+/*Encontrar una Vacancies por id*/
+export const findVacanciesID = async (req, res) => {
+
+  try{
+  const vacancie = await Vacancies.findById(req.params.id)
+
+  if (!vacancie) {
+    return res.status(404).json({
+      "message": "Vacancie doesn´t exists"
+    })
+  }
+
+  return res.json(vacancie)
     }catch(error){
     return res.status(500).json({message: error.message})
   }

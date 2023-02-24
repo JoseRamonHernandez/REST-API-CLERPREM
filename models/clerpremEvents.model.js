@@ -7,11 +7,6 @@ const EventsSchema = mongoose.Schema({
     requerid: false,
   },
 
-  level: {
-    type: String,
-    requerid: false,
-  },
-
   photo: {
     type: String,
     requerid: false,
