@@ -14,6 +14,10 @@ const VacanciesSchema = mongoose.Schema({
     type: String,
     required: false
   },
+  deadline:{
+    type: String,
+    required: false
+  },
   photo: {
     type: String,
     required: false
