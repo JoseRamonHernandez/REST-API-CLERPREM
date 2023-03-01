@@ -491,15 +491,17 @@ export const getVacancies = async (req, res) => {
 export const createVacancies = async (req, res) => {
 
   try {
-    const { title, description, date_register, deadline, photo, area } = req.body
+    const { title, puesto, description, date_register, deadline, photo, area, status } = req.body
 
     const vacancie = new Vacancies({
       title,
+      puesto,
       description,
       date_register,
       deadline,
       photo,
-      area
+      area,
+      status
     })
     await vacancie.save()
     res.send({ "code": 201, "message": "Vacancie inserted successfully" })
@@ -660,7 +662,7 @@ export const deleteProject = async (req, res) => {
   try {
     const project = await Projects.findByIdAndDelete(req.params.id)
 
-    if (!event) {
+    if (!project) {
       return res.status(404).json({
         "message": "Project doesn´t exists"
       })

@@ -6,6 +6,10 @@ const VacanciesSchema = mongoose.Schema({
     type: String,
     required: false
   },
+  puesto: {
+    type: String,
+    required: false
+  },
   description: {
     type: String,
     required: false
@@ -23,6 +27,10 @@ const VacanciesSchema = mongoose.Schema({
     required: false
   },
   area: {
+    type: String,
+    required: false
+  },
+  status: {
     type: String,
     required: false
   },
