@@ -34,8 +34,22 @@ import {
   createProject,
   updateProject,
   deleteProject,
-  findProjectID
-  
+  findProjectID,
+  getCategories,
+  createCategorie,
+  updateCategorie,
+  insertCourse,
+  deleteCategorie,
+  findCoursesID,
+  findCategorie,
+  findCursoByIdOnCategorieID,
+  insertMaterial,
+  insertQuestion,
+  findQuestion,
+  insertAnswerOption,
+  insertOptions,
+  findAnswerOption,
+  getOptions
  
 } from '../controllers/clerprem.controller.js'
 
@@ -120,5 +134,37 @@ router.post('/updateProject/:id', updateProject)
 router.get('/deleteProject/:id', deleteProject)
 
 router.get('/findProject/:id', findProjectID)
+
+//RUTAS PARA Categories
+
+router.get('/Categories', getCategories)
+
+router.post('/createCategorie', createCategorie)
+
+router.post('/updateCategorie/:id', updateCategorie)
+
+router.post('/insertCourse/:id', insertCourse)
+
+router.get('/deleteCategorie/:id', deleteCategorie)
+
+router.get('/findCourses/:id', findCoursesID)
+
+router.get('/findCategorie/:id', findCategorie)
+
+router.get('/:id/curso/:idcurso', findCursoByIdOnCategorieID)
+
+router.post('/:id/insertMaterial/:idcurso', insertMaterial)
+
+router.post('/:id/insertQuestions/:idcurso', insertQuestion)
+
+router.get('/:id/curso/:idcurso/question/:idQuestion', findQuestion)
+
+router.post('/:id/curso/:idcurso/insertAnswerOption/:idQuestion', insertAnswerOption)
+
+router.post('/:id/curso/:idcurso/insertOptions/:idQuestion', insertOptions)
+
+router.get('/:id/curso/:idcurso/getAnswer/:idQuestion', findAnswerOption)
+
+router.get('/:id/curso/:idcurso/getOptions/:idQuestion', getOptions)
 
 export default router

@@ -26,10 +26,6 @@ const VacanciesSchema = mongoose.Schema({
     type: String,
     required: false
   },
-  area: {
-    type: String,
-    required: false
-  },
   status: {
     type: String,
     required: false

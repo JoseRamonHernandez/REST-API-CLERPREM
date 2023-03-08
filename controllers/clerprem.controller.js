@@ -7,6 +7,8 @@ import Alert from '../models/clerpremAlerts.model.js'
 import Vacancies from '../models/clerpremVacancies.model.js'
 
 import Projects from '../models/clerpremProjects.model.js'
+
+import Categories from '../models/clerpremCategories.model.js'
 //import {uploadImage} from '../utils/cloudinary.js'
 
 
@@ -491,7 +493,7 @@ export const getVacancies = async (req, res) => {
 export const createVacancies = async (req, res) => {
 
   try {
-    const { title, puesto, description, date_register, deadline, photo, area, status } = req.body
+    const { title, puesto, description, date_register, deadline, photo, status } = req.body
 
     const vacancie = new Vacancies({
       title,
@@ -500,7 +502,6 @@ export const createVacancies = async (req, res) => {
       date_register,
       deadline,
       photo,
-      area,
       status
     })
     await vacancie.save()
@@ -692,4 +693,417 @@ export const findProjectID = async (req, res) => {
     return res.status(500).json({ message: error.message })
   }
 
+}
+
+
+
+// Model Categories
+
+/* Traer todos las Categorias*/
+export const getCategories = async (req, res) => {
+
+  try {
+    const categories = await Categories.find()
+    res.json(categories)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+/* Crear una Categoria*/
+export const createCategorie = async (req, res) => {
+
+  try {
+    const { name_of_categorie, description, level } = req.body
+
+    const categorie = new Categories({
+      name_of_categorie,
+      description,
+      level
+    })
+    await categorie.save()
+    res.send({ "code": 201, "message": "Categorie inserted successfully" })
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+/*Actualizar una Categoria*/
+export const updateCategorie = async (req, res) => {
+
+  try {
+    const { id } = req.params
+
+    const categorieUpdated = await Categories.findByIdAndUpdate(id, req.body, {
+      new: true
+    })
+    return res.json(categorieUpdated)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+/*Insertar curso nuevo a una categoria ya registrada*/
+export const insertCourse = async (req, res) => {
+  const { id } = req.params; // id del registro existente
+  const { name_of_course } = req.body; // nuevos campos a agregar
+
+  try {
+    const registroExistente = await Categories.findById(id); // buscar el registro existente de la categoria
+    if (!registroExistente) {
+      return res.status(404).json({ mensaje: 'Categoria no encontrada' });
+    }
+
+
+    registroExistente.courses.push({ name_of_course: name_of_course });
+
+    await registroExistente.save();
+    res.json({ mensaje: 'Curso agregado correctamente', registro: registroExistente });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: 'Error al agregar campos nuevos' });
+  }
+}
+
+
+
+/*Eliminar una Categoria*/
+export const deleteCategorie = async (req, res) => {
+
+  try {
+    const categorie = await Categories.findByIdAndDelete(req.params.id)
+
+    if (!categorie) {
+      return res.status(404).json({
+        "message": "Categorie doesn´t exists"
+      })
+    }
+
+    return res.send({ "code": 202, "message": "Categorie was deleted" })
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+
+/*Get all Courses by id of Categorie*/
+export const findCoursesID = async (req, res) => {
+
+  try {
+    const courses = await Categories.findById(req.params.id)
+
+    if (!courses) {
+      return res.status(404).json({
+        "message": "courses doesn´t exists"
+      })
+    }
+
+    return res.json(courses.courses)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+
+}
+
+/*Encontrar una Categoria por id */
+export const findCategorie = async (req, res) => {
+
+  try {
+    const categorie = await Categories.findById(req.params.id)
+
+    if (!categorie) {
+      return res.status(404).json({
+        "message": "Categorie doesn´t exists"
+      })
+    }
+
+    return res.json(categorie)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+
+}
+
+
+          
+/*  Encontrar un curso por su ID dentro de una categoria por ID */
+export const findCursoByIdOnCategorieID = async (req, res) => {
+  try {
+    const categoria = await Categories.findById(req.params.id);
+
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    res.status(200).json({ curso });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar el curso' });
+  }
+}
+
+
+
+      
+/* Insertar Material dentro de un curso */
+export const insertMaterial = async (req, res) => {
+  try {
+    const categoria = await Categories.findById(req.params.id);
+const { name } = req.body; // nuevos campos a agregar
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+    
+  curso.material.push({ name: name });
+
+    await categoria.save();
+    res.json({ mensaje: 'Registros agregados correctamente', registro: curso });
+
+    
+    //res.status(200).json({ curso });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar el curso' });
+  }
+}
+
+
+
+      
+/* Insertar Question Text dentro de un curso */
+export const insertQuestion = async (req, res) => {
+  try {
+    const categoria = await Categories.findById(req.params.id);
+const { question_text } = req.body; // nuevos campos a agregar
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+    
+  curso.questions.push({ question_text: question_text });
+
+    await categoria.save();
+    res.json({ mensaje: 'Registros agregados correctamente', registro: curso });
+
+    
+    //res.status(200).json({ curso });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar el curso' });
+  }
+}
+
+
+
+          
+/*  Encontrar una pregunta por su id dentro de una consulta de un curso por id y de la categoria por id*/
+
+export const findQuestion = async (req, res) => {
+  try {
+    const categoria = await Categories.findById(req.params.id);
+
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    const question = curso.questions.find((c) => c._id == req.params.idQuestion);
+
+    if(!question){
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    res.status(200).json({ question });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar la pregunta' });
+  }
+}
+
+
+
+                                          
+/*  Insertar answerOption dentro de una respuesta por id */
+
+export const insertAnswerOption = async (req, res) => {
+  try {
+    const categoria = await Categories.findById(req.params.id);
+const { answerOption } = req.body; // nuevos campos a agregar
+    
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    const question = curso.questions.find((c) => c._id == req.params.idQuestion);
+
+    if(!question){
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    question.answerOption = req.body.answerOption;
+
+
+   await categoria.save();
+    res.json({ mensaje: 'Registros agregados correctamente', registro: question });
+    
+    //res.status(200).json({ question });
+
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar la pregunta' });
+  }
+}
+
+
+
+/*  Insertar 4 Opciones para la pregunta por _id*/
+
+export const insertOptions = async (req, res) => {
+  try {
+    const categoria = await Categories.findById(req.params.id);
+
+    const { option1, option2, option3, option4 } = req.body; // nuevos campos a agregar
+    
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    const question = curso.questions.find((c) => c._id == req.params.idQuestion);
+
+    if(!question){
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+question.options.push({ option1: option1, option2: option2, option3: option3, option4: option4 });
+
+    await categoria.save();
+    res.json({ mensaje: 'Registros agregados correctamente', registro: question });
+    
+    //res.status(200).json({ question });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar la pregunta' });
+  }
+}
+
+
+         
+/*  Encontrar answerOption dentro de una pregunta por su id*/
+
+export const findAnswerOption = async (req, res) => {
+  try {
+    const categoria = await Categories.findById(req.params.id);
+
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    const question = curso.questions.find((c) => c._id == req.params.idQuestion);
+
+    if(!question){
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    const answer = question.answerOption;
+    res.status(200).json({ answer });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar la pregunta' });
+  }
+}
+
+
+/* Get all Options dentro de una pregunta por su id*/
+
+export const getOptions = async (req, res) => {
+  try {
+    const categoria = await Categories.findById(req.params.id);
+
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    const question = curso.questions.find((c) => c._id == req.params.idQuestion);
+
+    if(!question){
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    const options = question.options;
+    res.status(200).json({ options });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar la pregunta' });
+  }
 }
