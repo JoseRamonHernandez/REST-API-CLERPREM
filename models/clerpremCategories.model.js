@@ -14,10 +14,19 @@ const CategoriesSchema = mongoose.Schema({
     type: String,
     required: false
   },
+  background: {
+    type: String,
+    required: false
+  },
+  colorText: {
+    type: String,
+    required: false
+  },
   courses: [{
     name_of_course: String,
     material: [{
-      name: String
+      name: String,
+      documentType: String
     }],
     questions: [{
       question_text: String,

@@ -49,8 +49,12 @@ import {
   insertAnswerOption,
   insertOptions,
   findAnswerOption,
-  getOptions
- 
+  getOptions,
+  deleteCourse,
+  deleteMaterial,
+  getAllQuestions,
+  deleteOneQuestion
+
 } from '../controllers/clerprem.controller.js'
 
 const router = Router()
@@ -166,5 +170,13 @@ router.post('/:id/curso/:idcurso/insertOptions/:idQuestion', insertOptions)
 router.get('/:id/curso/:idcurso/getAnswer/:idQuestion', findAnswerOption)
 
 router.get('/:id/curso/:idcurso/getOptions/:idQuestion', getOptions)
+
+router.get('/:id/deleteCourse/:idcurso', deleteCourse)
+
+router.get('/:id/:idcurso/material/:idmaterial', deleteMaterial)
+
+router.get('/:id/questions/:idcurso', getAllQuestions)
+
+router.get('/:id/course/:idcurso/question/:idpregunta', deleteOneQuestion)
 
 export default router
