@@ -53,7 +53,10 @@ import {
   deleteCourse,
   deleteMaterial,
   getAllQuestions,
-  deleteOneQuestion
+  deleteOneQuestion,
+  updateQuestionText,
+  updateAnswerOption,
+  updateAllOptions
 
 } from '../controllers/clerprem.controller.js'
 
@@ -178,5 +181,11 @@ router.get('/:id/:idcurso/material/:idmaterial', deleteMaterial)
 router.get('/:id/questions/:idcurso', getAllQuestions)
 
 router.get('/:id/course/:idcurso/question/:idpregunta', deleteOneQuestion)
+
+router.post('/:id/course/:idcurso/question/:idpregunta/insertQuestion', updateQuestionText)
+
+router.post('/:id/course/:idcurso/question/:idpregunta/insertAnswerOption', updateAnswerOption)
+
+router.post('/:id/course/:idcurso/question/:idpregunta/insertOptions/:idoption', updateAllOptions)
 
 export default router

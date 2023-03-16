@@ -1234,7 +1234,7 @@ export const deleteOneQuestion = async (req, res) => {
       return res.status(404).json({ message: 'El curso no existe' });
     }
 
-     // Buscamos la pregunta por su _id en el array de preguntas del curso
+    // Buscamos la pregunta por su _id en el array de preguntas del curso
     const question = curso.questions.find((q) => q._id == req.params.idpregunta);
 
     // Verificamos que la pregunta exista
@@ -1251,11 +1251,11 @@ export const deleteOneQuestion = async (req, res) => {
     // Respondemos con un mensaje de éxito
     res.status(200).json({ message: 'La pregunta ha sido eliminada exitosamente' });
 
-   /*
-    const questions = curso.questions;
-
-    res.status(200).json({ questions });
-    */
+    /*
+     const questions = curso.questions;
+ 
+     res.status(200).json({ questions });
+     */
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error al buscar la pregunta' });
@@ -1264,3 +1264,149 @@ export const deleteOneQuestion = async (req, res) => {
 
 
 
+/* Actualizar question_text */
+
+export const updateQuestionText = async (req, res) => {
+  try {
+
+
+    const categoria = await Categories.findById(req.params.id);
+
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    // Buscamos la pregunta por su _id en el array de preguntas del curso
+    const question = curso.questions.find((q) => q._id == req.params.idpregunta);
+
+
+
+
+    // Verificamos que la pregunta exista
+    if (!question) {
+      return res.status(404).json({ message: 'La pregunta no existe' });
+    }
+
+
+    // Actualizamos el campo question_text de la pregunta en la base de datos
+    const updatedQuestion = await Categories.findOneAndUpdate(
+      { _id: req.params.id, 'courses._id': req.params.idcurso, 'courses.questions._id': req.params.idpregunta },
+      { $set: { 'courses.$.questions.$[question].question_text': req.body.question_text } },
+      { new: true, arrayFilters: [{ 'question._id': req.params.idpregunta }] }
+    );
+
+    return res.json(updatedQuestion);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar la pregunta' });
+  }
+}
+
+
+/* Actualizar all Options */
+
+export const updateAllOptions = async (req, res) => {
+  try {
+    const categoria = await Categories.findById(req.params.id);
+
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    // Buscamos la pregunta por su _id en el array de preguntas del curso
+    const question = curso.questions.find((q) => q._id == req.params.idpregunta);
+
+    // Verificamos que la pregunta exista
+    if (!question) {
+      return res.status(404).json({ message: 'La pregunta no existe' });
+    }
+
+ // Buscamos todas las opciones de la pregunta y actualizamos sus valores
+    question.options.forEach((option) => {
+      if (option._id == req.params.idoption) {
+        option.option1 = req.body.option1;
+        option.option2 = req.body.option2;
+        option.option3 = req.body.option3;
+        option.option4 = req.body.option4;
+      }
+    });
+
+    // Guardamos los cambios en la base de datos
+    await categoria.save();
+
+    return res.json(question.options);  
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar la pregunta' });
+  }
+}
+
+
+
+/* Actualizar answerOption */
+
+export const updateAnswerOption = async (req, res) => {
+  try {
+
+
+    const categoria = await Categories.findById(req.params.id);
+
+    // Verificamos que la categoría exista
+    if (!categoria) {
+      return res.status(404).json({ message: 'La categoría no existe' });
+    }
+
+    // Buscamos el curso por su id en el array de cursos de la categoría
+    const curso = categoria.courses.find((c) => c._id == req.params.idcurso);
+
+    // Verificamos que el curso exista
+    if (!curso) {
+      return res.status(404).json({ message: 'El curso no existe' });
+    }
+
+    // Buscamos la pregunta por su _id en el array de preguntas del curso
+    const question = curso.questions.find((q) => q._id == req.params.idpregunta);
+
+
+
+
+    // Verificamos que la pregunta exista
+    if (!question) {
+      return res.status(404).json({ message: 'La pregunta no existe' });
+    }
+
+
+    // Actualizamos el campo answerOption de la pregunta en la base de datos
+    const updatedAnswerOption = await Categories.findOneAndUpdate(
+      { _id: req.params.id, 'courses._id': req.params.idcurso, 'courses.questions._id': req.params.idpregunta },
+      { $set: { 'courses.$.questions.$[question].answerOption': req.body.answerOption } },
+      { new: true, arrayFilters: [{ 'question._id': req.params.idpregunta }] }
+    );
+
+    return res.json(updatedAnswerOption);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar la pregunta' });
+  }
+}
