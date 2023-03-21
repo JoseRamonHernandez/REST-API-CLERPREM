@@ -9,6 +9,8 @@ import Vacancies from '../models/clerpremVacancies.model.js'
 import Projects from '../models/clerpremProjects.model.js'
 
 import Categories from '../models/clerpremCategories.model.js'
+
+import Operations from '../models/clerpremOperations.model.js'
 //import {uploadImage} from '../utils/cloudinary.js'
 
 
@@ -1340,7 +1342,7 @@ export const updateAllOptions = async (req, res) => {
       return res.status(404).json({ message: 'La pregunta no existe' });
     }
 
- // Buscamos todas las opciones de la pregunta y actualizamos sus valores
+    // Buscamos todas las opciones de la pregunta y actualizamos sus valores
     question.options.forEach((option) => {
       if (option._id == req.params.idoption) {
         option.option1 = req.body.option1;
@@ -1353,7 +1355,7 @@ export const updateAllOptions = async (req, res) => {
     // Guardamos los cambios en la base de datos
     await categoria.save();
 
-    return res.json(question.options);  
+    return res.json(question.options);
 
   } catch (error) {
     console.error(error);
@@ -1409,4 +1411,131 @@ export const updateAnswerOption = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: 'Error al buscar la pregunta' });
   }
+}
+
+
+// Model Operations
+
+/* Traer todos los Operations*/
+export const getOperations = async (req, res) => {
+
+  try {
+    const operation = await Operations.find()
+    res.json(operation)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+/* Crear una Operation*/
+export const createOperation = async (req, res) => {
+
+  try {
+    const { name_of_operation, project } = req.body
+
+    const operation = new Operations({
+      name_of_operation,
+      project
+    })
+    await operation.save()
+    res.send({ "code": 201, "message": "Operation inserted successfully" })
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+/*Actualizar una Operation*/
+export const updateOperation = async (req, res) => {
+
+  try {
+    const { id } = req.params
+
+    const operationUpdated = await Operations.findByIdAndUpdate(id, req.body, {
+      new: true
+    })
+    return res.json(operationUpdated)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+/*Actualizar una Operation para registros de Collaborator*/
+export const agregarCollaborators = async (req, res) => {
+  const { id } = req.params; // id del registro existente
+  const { no_collaborator, porcent } = req.body; // nuevos campos a agregar
+
+  try {
+    const registroExistente = await Operations.findById(id); // buscar el registro existente
+    if (!registroExistente) {
+      return res.status(404).json({ mensaje: 'Operacion no encontrada' });
+    }
+
+
+    registroExistente.personal_register.push({ no_collaborator: no_collaborator, porcent: porcent });
+
+    await registroExistente.save();
+    res.json({ mensaje: 'Registros agregados correctamente', registro: registroExistente });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: 'Error al agregar campos nuevos' });
+  }
+}
+
+
+
+/*Eliminar una Operation*/
+export const deleteOperation = async (req, res) => {
+
+  try {
+    const operation = await Operations.findByIdAndDelete(req.params.id)
+
+    if (!operation) {
+      return res.status(404).json({
+        "message": "Operation doesn´t exists"
+      })
+    }
+
+    return res.send({ "code": 202, "message": "Operation was deleted" })
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+
+/*Get all Collaborators por id de Operation en el array personal_register*/
+export const getCollaboratorsIntoOperationID = async (req, res) => {
+
+  try {
+    const operation = await Operations.findById(req.params.id)
+
+    if (!operation) {
+      return res.status(404).json({
+        "message": "Operation doesn´t exists"
+      })
+    }
+
+    return res.json(operation.personal_register)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+
+}
+
+/*Encontrar una Operation por id */
+export const findOperation = async (req, res) => {
+
+  try {
+    const operation = await Operations.findById(req.params.id)
+
+    if (!operation) {
+      return res.status(404).json({
+        "message": "Operation doesn´t exists"
+      })
+    }
+
+    return res.json(operation)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+
 }

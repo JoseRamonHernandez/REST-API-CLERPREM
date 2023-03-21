@@ -56,7 +56,14 @@ import {
   deleteOneQuestion,
   updateQuestionText,
   updateAnswerOption,
-  updateAllOptions
+  updateAllOptions,
+  getOperations,
+  createOperation,
+  updateOperation,
+  agregarCollaborators,
+  deleteOperation,
+  getCollaboratorsIntoOperationID,
+  findOperation
 
 } from '../controllers/clerprem.controller.js'
 
@@ -187,5 +194,21 @@ router.post('/:id/course/:idcurso/question/:idpregunta/insertQuestion', updateQu
 router.post('/:id/course/:idcurso/question/:idpregunta/insertAnswerOption', updateAnswerOption)
 
 router.post('/:id/course/:idcurso/question/:idpregunta/insertOptions/:idoption', updateAllOptions)
+
+// RUTAS PARA Operations
+
+router.get('/operations', getOperations)
+
+router.post('/newOperation', createOperation)
+
+router.post('/updateOperation/:id', updateOperation)
+
+router.post('/insertCollaborator/operation/:id', agregarCollaborators)
+
+router.get('/deleteOperation/:id', deleteOperation)
+
+router.get('/getCollaborators/operation/:id', getCollaboratorsIntoOperationID)
+
+router.get('/findOperation/:id', findOperation)
 
 export default router
