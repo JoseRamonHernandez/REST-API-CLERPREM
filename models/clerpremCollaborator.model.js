@@ -60,6 +60,20 @@ const collaboratorSchema = mongoose.Schema({
   vacancies_applied: [{
     name_vacancie: String,
     application_date: String
+  }],
+  operations_applied: [{
+    id_operation:{
+      type: String,
+      required: false
+    },
+    project2: {
+      type: String,
+      required: false
+    },
+    porcent: {
+      type: String,
+      required: false
+    }
   }]
   });
 

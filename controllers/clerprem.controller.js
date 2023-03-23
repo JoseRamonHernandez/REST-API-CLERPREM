@@ -286,6 +286,164 @@ export const showApplied = async (req, res) => {
 
 }
 
+/*Aplicar a un nuevo PROYECTO*/
+export const projectApplied = async (req, res) => {
+  const { id } = req.params; // id del colaborador existente
+  const { id_operation, project2, porcent } = req.body; // nuevo nombre_de_vacante y Fecha de aplicación
+
+  try {
+    const registroExistente = await Collaborator.findById(id); // buscar el registro existente
+    if (!registroExistente) {
+      return res.status(404).json({ mensaje: 'Colaborador no encontrado' });
+    }
+    /*
+    console.log(subtitulo);
+    console.log(indice);
+    console.log(registroExistente.subtitulos);
+    */
+
+    registroExistente.operations_applied.push({ id_operation: id_operation, project2: project2, porcent: porcent });
+
+    await registroExistente.save();
+    res.json({ mensaje: 'Operacion registrada para el colaborador' });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: 'Error al agregar nuevos campos' });
+  }
+}
+
+/*Get all Operations into collaborator*/
+export const showOperationApplied = async (req, res) => {
+
+  try {
+    const operation = await Collaborator.findById(req.params.id)
+
+    if (!operation) {
+      return res.status(404).json({
+        "message": "User doesn´t exists"
+      })
+    }
+
+    return res.json(operation.operations_applied)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+
+}
+
+
+/* Actualizar porcentaje del registro de la operacion en el colaborador */
+export const updatePorcentIntoCollaborator = async (req, res) => {
+
+   try {
+    const collaborator = await Collaborator.findById(req.params.id);
+
+    if (!collaborator) {
+      return res.status(404).json({
+        message: "User doesn´t exists",
+      });
+    }
+
+    const operationId = req.params.operationId;
+    const newPorcent = req.body.porcent;
+
+    const operationsApplied = collaborator.operations_applied;
+
+    // Buscar la operación por su _id
+    const operationIndex = operationsApplied.findIndex(
+      (operation) => operation.id_operation.toString() === operationId
+    );
+
+    if (operationIndex === -1) {
+      return res.status(404).json({
+        message: "Operation doesn´t exists",
+      });
+    }
+
+    // Actualizar el campo "porcent" de la operación
+    operationsApplied[operationIndex].porcent = newPorcent;
+
+    // Guardar el colaborador actualizado en la base de datos
+    await collaborator.save();
+
+    return res.json(operationsApplied[operationIndex]);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+
+}
+
+
+//Eliminamos el registro de la operacion dentro del colaborador
+export const deleteOperationINTOcollaborator = async (req, res) => {
+
+   try {
+    const collaborator = await Collaborator.findById(req.params.id)
+
+    if (!collaborator) {
+      return res.status(404).json({
+        "message": "User doesn´t exists"
+      })
+    }
+
+    const operationId = req.params.operationId;
+
+    const operationsApplied = collaborator.operations_applied;
+
+    const filteredOperations = operationsApplied.filter(operation => operation.id_operation.toString() !== operationId.toString());
+
+    if (operationsApplied.length === filteredOperations.length) {
+      return res.status(404).json({
+        "message": "Operation doesn´t exists"
+      })
+    }
+
+    collaborator.operations_applied = filteredOperations;
+
+    await collaborator.save();
+
+    return res.json({
+      "message": "Operation deleted successfully"
+    });
+
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+  
+  
+}
+
+
+/* Traer el registro de una operacion dentro del colaborador */
+export const getOPERATIONintoCollaborator = async (req, res) => {
+
+   try {
+    const collaborator = await Collaborator.findById(req.params.id);
+
+    if (!collaborator) {
+      return res.status(404).json({
+        message: "User doesn´t exists",
+      });
+    }
+
+    const operationId = req.params.operationId;
+    const operation = collaborator.operations_applied.find((o) => o.id_operation.toString() === operationId.toString());
+
+    if (!operation) {
+      return res.status(404).json({
+        message: "Operation doesn´t exists",
+      });
+    }
+
+    return res.json(operation);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+
+}
+
+
 
 // Model Events
 
@@ -1538,4 +1696,96 @@ export const findOperation = async (req, res) => {
     return res.status(500).json({ message: error.message })
   }
 
+}
+
+
+/* Traer todas las operations "name_of_operation" en donde se encuentre un colaborador por su numero de empleado*/
+export const getOperationsOfCollaborator = async (req, res) => {
+
+  try {
+    const noCollaborator = req.params.noCollaborator;
+    const data = await Operations.find({ 'personal_register.no_collaborator': noCollaborator }, { name_of_operation: 1, project: 1, 'personal_register.no_collaborator': 1, 'personal_register.porcent': 1 }); // Buscar documentos que contengan el ID del colaborador en "personal_register"
+    const personalRegister = data.find(d => d.personal_register.some(p => p.no_collaborator === noCollaborator));
+    const porcent = personalRegister ? personalRegister.personal_register.find(p => p.no_collaborator === noCollaborator).porcent : null;
+    res.json({ name_of_operation: personalRegister?.name_of_operation, project: personalRegister?.project, porcent }); // Devolver los documentos que cumplen con la condición
+  } catch (error) {
+    console.log(error); // Manejar errores en la consulta
+    res.status(500).send('Error en el servidor');
+  }
+}
+
+
+/* Traer todas las operations "project" en donde se encuentre un colaborador por su numero de empleado*/
+export const getOperationsOfCollaboratorProject = async (req, res) => {
+
+  try {
+    const noCollaborator = req.params.noCollaborator;
+    const data = await Operations.find({ 'personal_register.no_collaborator': noCollaborator }, { name_of_operation: 1, project: 1, 'personal_register.porcent': 1 }); // Buscar documentos que contengan el ID del colaborador en "personal_register"
+    res.json(data); // Devolver los documentos que cumplen con la condición
+  } catch (error) {
+    console.log(error); // Manejar errores en la consulta
+    res.status(500).send('Error en el servidor');
+  }
+}
+
+
+
+/*Actualizar porent de una Operation por id y por numero de empleado */
+export const updatePorcentOPERATION = async (req, res) => {
+
+  try {
+    const operation = await Operations.findById(req.params.id)
+
+    if (!operation) {
+      return res.status(404).json({
+        "message": "Operation doesn´t exists"
+      })
+    }
+
+     const collaboratorIndex = operation.personal_register.findIndex(collaborator => String(collaborator.no_collaborator) === req.params.collaboratorNUMERO);
+    if (collaboratorIndex === -1) {
+      return res.status(404).json({
+        "message": "Collaborator doesn´t exists"
+      })
+    }
+
+    operation.personal_register[collaboratorIndex].porcent = req.body.porcent;
+
+    const updatedOperation = await operation.save();
+
+    return res.json(updatedOperation);
+
+    return res.json(operation)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+
+}
+
+//ELiminar un registro del colaborador en operaciones
+export const deleteRegisterCollaboratorINTOoperation = async (req, res) => {
+  try {
+    const operation = await Operations.findById(req.params.id);
+
+    if (!operation) {
+      return res.status(404).json({
+        "message": "Operation doesn´t exists"
+      })
+    }
+
+    const collaboratorIndex = operation.personal_register.findIndex(collaborator => String(collaborator._id) === req.params.collaboratorId);
+    if (collaboratorIndex === -1) {
+      return res.status(404).json({
+        "message": "Collaborator doesn´t exists"
+      })
+    }
+
+    operation.personal_register.splice(collaboratorIndex, 1);
+
+    const updatedOperation = await operation.save();
+
+    return res.json(updatedOperation);
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
 }

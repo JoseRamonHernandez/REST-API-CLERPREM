@@ -12,6 +12,13 @@ import {
   findForType,
   vacanciesApplied,
   showApplied,
+  projectApplied,
+  showOperationApplied,
+  updatePorcentIntoCollaborator,
+  deleteOperationINTOcollaborator,
+  updatePorcentOPERATION,
+  deleteRegisterCollaboratorINTOoperation,
+  getOPERATIONintoCollaborator,
   getEvents,
   createEvent,
   updateEvent,
@@ -63,7 +70,9 @@ import {
   agregarCollaborators,
   deleteOperation,
   getCollaboratorsIntoOperationID,
-  findOperation
+  findOperation,
+  getOperationsOfCollaborator,
+  getOperationsOfCollaboratorProject
 
 } from '../controllers/clerprem.controller.js'
 
@@ -93,6 +102,16 @@ router.get('/collaboratorType/:user', findForType)
 router.post('/vacaniesApplied/:id', vacanciesApplied)
 
 router.get('/showApplied/:id', showApplied)
+
+router.post('/registerOperation/:id', projectApplied)
+
+router.get('/showAllOperationRegisterINTOCollaborator/:id', showOperationApplied)
+
+router.post('/:id/operations/:operationId', updatePorcentIntoCollaborator)
+
+router.get('/:id/DeleteOperationsINTOcollaborator/:operationId', deleteOperationINTOcollaborator)
+
+router.get('/:id/getOPERATIONintoCollaborator/:operationId', getOPERATIONintoCollaborator)
 
 //RUTAS PARA EVENTOS
 
@@ -210,5 +229,13 @@ router.get('/deleteOperation/:id', deleteOperation)
 router.get('/getCollaborators/operation/:id', getCollaboratorsIntoOperationID)
 
 router.get('/findOperation/:id', findOperation)
+
+router.get('/getOperationsOfCollaborator/:noCollaborator', getOperationsOfCollaborator)
+
+router.get('/getOperationsOfCollaboratorProject/:noCollaborator', getOperationsOfCollaboratorProject)
+
+router.post('/:id/updatePorcentOPERATION/:collaboratorNUMERO', updatePorcentOPERATION)
+
+router.get('/:id/deleteRegisterCollaboratorINTOoperation/:collaboratorId', deleteRegisterCollaboratorINTOoperation)
 
 export default router
