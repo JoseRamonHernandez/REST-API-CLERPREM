@@ -62,7 +62,7 @@ const collaboratorSchema = mongoose.Schema({
     application_date: String
   }],
   operations_applied: [{
-    id_operation:{
+    id_operation: {
       type: String,
       required: false
     },
@@ -74,7 +74,14 @@ const collaboratorSchema = mongoose.Schema({
       type: String,
       required: false
     }
+  }],
+  courses_completed: [{
+    id_course: String,
+    calf: String
+  }],
+  categories_completed: [{
+    id_categorie: String
   }]
-  });
+});
 
 export default mongoose.model('Collaborator', collaboratorSchema)

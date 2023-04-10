@@ -19,6 +19,10 @@ import {
   updatePorcentOPERATION,
   deleteRegisterCollaboratorINTOoperation,
   getOPERATIONintoCollaborator,
+  coursesCompleted,
+  showCoursesCompleted,
+  categoriesCompleted,
+  showCategoriesCompleted,
   getEvents,
   createEvent,
   updateEvent,
@@ -112,6 +116,14 @@ router.post('/:id/operations/:operationId', updatePorcentIntoCollaborator)
 router.get('/:id/DeleteOperationsINTOcollaborator/:operationId', deleteOperationINTOcollaborator)
 
 router.get('/:id/getOPERATIONintoCollaborator/:operationId', getOPERATIONintoCollaborator)
+
+router.post('/:id/coursesCompleted', coursesCompleted)
+
+router.get('/:id/showCoursesCompleted', showCoursesCompleted)
+
+router.post('/:id/categoriesCompleted', categoriesCompleted)
+
+router.get('/:id/showCategoriesCompleted', showCategoriesCompleted)
 
 //RUTAS PARA EVENTOS
 

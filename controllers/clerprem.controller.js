@@ -336,7 +336,7 @@ export const showOperationApplied = async (req, res) => {
 /* Actualizar porcentaje del registro de la operacion en el colaborador */
 export const updatePorcentIntoCollaborator = async (req, res) => {
 
-   try {
+  try {
     const collaborator = await Collaborator.findById(req.params.id);
 
     if (!collaborator) {
@@ -378,7 +378,7 @@ export const updatePorcentIntoCollaborator = async (req, res) => {
 //Eliminamos el registro de la operacion dentro del colaborador
 export const deleteOperationINTOcollaborator = async (req, res) => {
 
-   try {
+  try {
     const collaborator = await Collaborator.findById(req.params.id)
 
     if (!collaborator) {
@@ -410,15 +410,15 @@ export const deleteOperationINTOcollaborator = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
-  
-  
+
+
 }
 
 
 /* Traer el registro de una operacion dentro del colaborador */
 export const getOPERATIONintoCollaborator = async (req, res) => {
 
-   try {
+  try {
     const collaborator = await Collaborator.findById(req.params.id);
 
     if (!collaborator) {
@@ -442,6 +442,94 @@ export const getOPERATIONintoCollaborator = async (req, res) => {
   }
 
 }
+
+
+/*Registrar curso completado*/
+export const coursesCompleted = async (req, res) => {
+  const { id } = req.params; // id del colaborador existente
+  const { id_course, calf } = req.body; // nuevos registros 
+
+  try {
+    const registroExistente = await Collaborator.findById(id); // buscar el registro existente
+    if (!registroExistente) {
+      return res.status(404).json({ mensaje: 'Colaborador no encontrado' });
+    }
+
+
+    registroExistente.courses_completed.push({ id_course: id_course, calf: calf });
+
+    await registroExistente.save();
+    res.json({ mensaje: 'Registro del curso registrado para el colaborador' });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: 'Error al agregar nuevos campos' });
+  }
+}
+
+/*Get all courses Completed into collaborator*/
+export const showCoursesCompleted = async (req, res) => {
+
+  try {
+    const collaborator = await Collaborator.findById(req.params.id)
+
+    if (!collaborator) {
+      return res.status(404).json({
+        "message": "Collaborator doesn´t exists"
+      })
+    }
+
+    return res.json(collaborator.courses_completed)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+
+}
+
+
+
+/*Registrar categoria completado*/
+export const categoriesCompleted = async (req, res) => {
+  const { id } = req.params; // id del colaborador existente
+  const { id_categorie } = req.body; // nuevos registros 
+
+  try {
+    const registroExistente = await Collaborator.findById(id); // buscar el registro existente
+    if (!registroExistente) {
+      return res.status(404).json({ mensaje: 'Colaborador no encontrado' });
+    }
+
+
+    registroExistente.categories_completed.push({ id_categorie: id_categorie });
+
+    await registroExistente.save();
+    res.json({ mensaje: 'Categoria registrada para el colaborador' });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: 'Error al agregar nuevos campos' });
+  }
+}
+
+/*Get all categories Completed into collaborator*/
+export const showCategoriesCompleted = async (req, res) => {
+
+  try {
+    const collaborator = await Collaborator.findById(req.params.id)
+
+    if (!collaborator) {
+      return res.status(404).json({
+        "message": "Collaborator doesn´t exists"
+      })
+    }
+
+    return res.json(collaborator.categories_completed)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+
+}
+
 
 
 
@@ -1742,7 +1830,7 @@ export const updatePorcentOPERATION = async (req, res) => {
       })
     }
 
-     const collaboratorIndex = operation.personal_register.findIndex(collaborator => String(collaborator.no_collaborator) === req.params.collaboratorNUMERO);
+    const collaboratorIndex = operation.personal_register.findIndex(collaborator => String(collaborator.no_collaborator) === req.params.collaboratorNUMERO);
     if (collaboratorIndex === -1) {
       return res.status(404).json({
         "message": "Collaborator doesn´t exists"
@@ -1773,7 +1861,7 @@ export const deleteRegisterCollaboratorINTOoperation = async (req, res) => {
       })
     }
 
-    const collaboratorIndex = operation.personal_register.findIndex(collaborator => String(collaborator._id) === req.params.collaboratorId);
+    const collaboratorIndex = operation.personal_register.findIndex(collaborator => String(collaborator.no_collaborator) === req.params.collaboratorId);
     if (collaboratorIndex === -1) {
       return res.status(404).json({
         "message": "Collaborator doesn´t exists"
